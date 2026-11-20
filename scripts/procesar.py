@@ -17,11 +17,18 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
 _rembg = None
 
 def resolver_pagina(u):
-    """'pagina:<url>' -> URL de la primera imagen de producto (wp-content/uploads) de esa página."""
+    """'pagina:<url>' -> URL de la imagen principal de esa página (og:image, o wp-content/uploads)."""
     if not u.startswith("pagina:"):
         return u
     import re
     html = requests.get(u[7:], headers=UA, timeout=60).text
+    m = re.search(r'<meta[^>]+property=["\']og:image(?::secure_url)?["\'][^>]+content=["\']([^"\']+)', html) or \
+        re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image', html)
+    if m:
+        img = m.group(1).replace("&amp;", "&")
+        if img.startswith("//"): img = "https:" + img
+        img = re.sub(r"-(?:480|640|320)-0\.(webp|jpg|png)", r"-1024-1024.\1", img)  # Tiendanube: versión grande
+        return img
     for m in re.finditer(r'(https?://[^"\'\s)]+/wp-content/uploads/[^"\'\s)]+\.(?:webp|png|jpe?g))', html):
         img = m.group(1)
         nombre = img.rsplit("/", 1)[-1].lower()
