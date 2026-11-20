@@ -1,13 +1,13 @@
 codigo,estado,nota
-0344-V,ok,
+0344-V,ya existía,
 0444-V,error,ValueError: sin imagen de producto en https://www.totalwine.com/wine/red-wine/cabernet-sauvignon/angelica-zapata-cabernet-sauvignon-by-catena-family-wines/p/239118750
 4509-V,error,ValueError: sin imagen de producto en https://simple.ripley.com.pe/vino-angelica-zapata-merlot-botella-750ml-pmp20001408395
-1486-V,ok,
-4616-V,ok,
-1580-V,ok,
-1699-V,ok,
-3585-V,ok,fondo quitado automáticamente
+1486-V,ya existía,
+4616-V,ya existía,
+1580-V,ya existía,
+1699-V,ya existía,
+3585-V,ya existía,
 2816-V,error,ValueError: sin imagen de producto en https://www.costco.com.mx/Vinos/Vinos/Vino-Tinto/Vino-Tinto-Nicolas-Catena-Zapata-750-ml/p/688091
-3787-V,ok,
+3787-V,ya existía,
 3688-V,error,ValueError: sin imagen de producto en https://www.wine.com/product/catena-zapata-adrianna-vineyard-white-bones-chardonnay-2021/1424971
 0476-V,error,ValueError: sin imagen de producto en https://directoro.com/nicasia-vineyards-vino-red-blend-cabernet-franc-merlot-and-petit-verdot-wine-abv-14.2-750-ml-25.4-fl-oz/
