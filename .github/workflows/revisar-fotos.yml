@@ -1,0 +1,27 @@
+name: Revisar fotos
+on:
+  workflow_dispatch:
+  push:
+    paths: ["scripts/revisar.py"]
+permissions:
+  contents: write
+concurrency:
+  group: procesar-fotos
+  cancel-in-progress: false
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow numpy opencv-python-headless requests "rembg[cpu]"
+      - run: cd scripts && cd .. && PYTHONPATH=scripts python scripts/revisar.py
+      - name: Guardar resultados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Revisión de fotos con el script corregido"
+          git push
