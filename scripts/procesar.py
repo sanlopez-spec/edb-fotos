@@ -16,6 +16,20 @@ LADO, ALTO, ANCHO = 1280, 1088, 1152
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
 _rembg = None
 
+def resolver_pagina(u):
+    """'pagina:<url>' -> URL de la primera imagen de producto (wp-content/uploads) de esa página."""
+    if not u.startswith("pagina:"):
+        return u
+    import re
+    html = requests.get(u[7:], headers=UA, timeout=60).text
+    for m in re.finditer(r'(https?://[^"\'\s)]+/wp-content/uploads/[^"\'\s)]+\.(?:webp|png|jpe?g))', html):
+        img = m.group(1)
+        nombre = img.rsplit("/", 1)[-1].lower()
+        if any(x in nombre for x in ("logo", "cropped", "image-1024", "since")) or re.match(r"^\d(-\d)?\.png$", nombre):
+            continue
+        return re.sub(r"-\d+x\d+(?=\.\w+$)", "", img)
+    raise ValueError("sin imagen de producto en " + u[7:])
+
 def quitar_fondo(im):
     global _rembg
     if _rembg is None:
@@ -92,6 +106,7 @@ def main():
             im, err = None, None
             for u in [x.strip() for x in url.split("|") if x.strip()]:
                 try:
+                    u = resolver_pagina(u)
                     resp = requests.get(u, headers=UA, timeout=60); resp.raise_for_status()
                     im = Image.open(io.BytesIO(resp.content)); im.load(); break
                 except Exception as e:
