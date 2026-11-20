@@ -1,3 +1,3 @@
 codigo,estado,nota
-4387-V,ok,fondo quitado automáticamente
+4387-V,ya existía,
 4455-V,error,"SSLError: HTTPSConnectionPool(host='compay.com.ar', port=443): Max retries exceeded with url: /productos/saint-felicien-edicion-limitada-tributo-a-fernando-maza-malbec-9wmmw (Caused by SSLError(SSLErr"

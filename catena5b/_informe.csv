@@ -1,0 +1,8 @@
+codigo,estado,nota
+0344-V,error,ValueError: sin imagen de producto en https://www.totalwine.com/wine/white-wine/chardonnay/angelica-zapata-chardonnay-by-catena-family-wines/p/2126214204
+0444-V,ok,fondo quitado automáticamente
+4509-V,ok,
+1580-V,ok,
+2816-V,error,ValueError: sin imagen de producto en https://www.wine.com/product/catena-zapata-nicolas-2009/127661
+3787-V,ok,
+3688-V,ok,
