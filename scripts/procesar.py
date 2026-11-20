@@ -50,8 +50,16 @@ def procesar(im):
     k = max(3, int(min(h, w) * 0.01))
     n, lab, st, _ = cv2.connectedComponentsWithStats(cv2.dilate(obj, np.ones((k, k), np.uint8)))
     areas = st[1:, cv2.CC_STAT_AREA]; big = areas.max()
-    km = np.isin(lab, [i + 1 for i, ar in enumerate(areas) if ar >= 0.15 * big]) & (obj > 0)
-    a[~km] = 255
+    keep = [i + 1 for i, ar in enumerate(areas) if ar >= 0.15 * big]
+    km = np.isin(lab, keep) & (obj > 0)
+    # Conservar todo lo que queda dentro de la silueta (envolvente convexa) de cada objeto,
+    # para no borrar logos o textos que en botellas blancas quedan como islas sueltas.
+    dentro = np.zeros((h, w), np.uint8)
+    for i in keep:
+        pts = cv2.findNonZero(((lab == i) & (obj > 0)).astype(np.uint8))
+        if pts is not None:
+            cv2.fillConvexPoly(dentro, cv2.convexHull(pts), 1)
+    a[dentro == 0] = 255
     ys, xs = np.where(km); y0, y1 = ys.min(), ys.max()
     strong = (km & (g < 170)).sum(axis=1).astype(float)
     mid = strong[y0 + int((y1 - y0) * 0.3):y0 + int((y1 - y0) * 0.8)]
