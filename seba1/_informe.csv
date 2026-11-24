@@ -1,23 +1,23 @@
 codigo,estado,nota
 2569-O,error,"ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
-1325-O,ok,fondo quitado automáticamente; reflejo recortado
-1183-O,ok,reflejo recortado
-4429-O,ok,
-4425-O,ok,
-4424-O,ok,
-4423-O,ok,fondo quitado automáticamente
-4415-O,ok,reflejo recortado
-4419-O,ok,
-3188-O,ok,
-0824-O,ok,reflejo recortado
-2570-O,ok,
-4416-O,ok,reflejo recortado
-4439-O,ok,
-4434-O,ok,reflejo recortado
-4441-O,ok,fondo quitado automáticamente
-4433-O,ok,
-4437-O,ok,
-4438-O,ok,
-2162-O,ok,reflejo recortado
-4428-O,ok,
-0781-O,ok,fondo quitado automáticamente
+1325-O,ya existía,
+1183-O,ya existía,
+4429-O,ya existía,
+4425-O,ya existía,
+4424-O,ya existía,
+4423-O,ya existía,
+4415-O,ya existía,
+4419-O,ya existía,
+3188-O,ya existía,
+0824-O,ya existía,
+2570-O,ya existía,
+4416-O,ya existía,
+4439-O,ya existía,
+4434-O,ya existía,
+4441-O,ya existía,
+4433-O,ya existía,
+4437-O,ya existía,
+4438-O,ya existía,
+2162-O,ya existía,
+4428-O,ya existía,
+0781-O,ya existía,
