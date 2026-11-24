@@ -55,7 +55,7 @@ def fondo_blanco(a):
     borde = np.concatenate([a[:b].reshape(-1, 3), a[-b:].reshape(-1, 3), a[:, :b].reshape(-1, 3), a[:, -b:].reshape(-1, 3)])
     return (borde.min(axis=1) >= 235).mean() > 0.9
 
-def procesar(im):
+def procesar(im, solo=None):
     nota = []
     im0 = im
     a = np.array(a_blanco(im))
@@ -72,6 +72,8 @@ def procesar(im):
     n, lab, st, _ = cv2.connectedComponentsWithStats(cv2.dilate(obj, np.ones((k, k), np.uint8)))
     areas = st[1:, cv2.CC_STAT_AREA]; big = areas.max()
     keep = [i + 1 for i, ar in enumerate(areas) if ar >= 0.15 * big]
+    if solo == "izq" and len(keep) > 1:
+        keep = [min(keep, key=lambda i: st[i, cv2.CC_STAT_LEFT])]; nota.append("solo objeto izquierdo")
     km = np.isin(lab, keep) & (obj > 0)
     # Conservar todo lo que queda dentro de la silueta (envolvente convexa) de cada objeto,
     # para no borrar logos o textos que en botellas blancas quedan como islas sueltas.
@@ -111,6 +113,8 @@ def main():
         if os.path.exists(destino): lotes.setdefault(lote, []).append((cod, "ya existía", "")); continue
         try:
             im, err = None, None
+            solo = None
+            if url.endswith("@@izq"): url, solo = url[:-5], "izq"
             for u in [x.strip() for x in url.split("|") if x.strip()]:
                 try:
                     u = resolver_pagina(u)
@@ -119,7 +123,7 @@ def main():
                 except Exception as e:
                     err = e; im = None
             if im is None: raise err
-            out, nota = procesar(im)
+            out, nota = procesar(im, solo)
             out.save(destino, quality=90)
             lotes.setdefault(lote, []).append((cod, "ok", nota))
         except Exception as e:
