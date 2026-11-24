@@ -1,26 +1,26 @@
 codigo,estado,nota
-0506-V,ok,fondo quitado automáticamente
-0508-V,ok,fondo quitado automáticamente
-0351-V,ok,fondo quitado automáticamente; reflejo recortado
-0434-V,ok,fondo quitado automáticamente
-3501-V,ok,
-3499-V,ok,
+0506-V,ya existía,
+0508-V,ya existía,
+0351-V,ya existía,
+0434-V,ya existía,
+3501-V,ya existía,
+3499-V,ya existía,
 4062-V,error,ValueError: sin imagen de producto en https://www.espaciovino.com.ar/vinos-ficha/Salentein-Primus-Merlot
-0505-V,ok,fondo quitado automáticamente
-0564-V,ok,
+0505-V,ya existía,
+0564-V,ya existía,
 2312-V,error,ValueError: sin imagen de producto en https://www.espaciovino.com.ar/vinos-ficha/Gran-VU-Blend
-2341-V,ok,
-3384-V,ok,fondo quitado automáticamente
-2701-V,ok,fondo quitado automáticamente
-0377-V,ok,fondo quitado automáticamente
-0378-V,ok,fondo quitado automáticamente
+2341-V,ya existía,
+3384-V,ya existía,
+2701-V,ya existía,
+0377-V,ya existía,
+0378-V,ya existía,
 1596-V,error,ValueError: sin imagen de producto en https://www.espaciovino.com.ar/vinos-ficha/Salentein-Late-Harvest
-1595-V,ok,fondo quitado automáticamente
-1594-V,ok,fondo quitado automáticamente
-2206-V,ok,
-2822-V,ok,
-3500-V,ok,fondo quitado automáticamente
-1905-V,ok,fondo quitado automáticamente
-0494-V,ok,fondo quitado automáticamente
+1595-V,ya existía,
+1594-V,ya existía,
+2206-V,ya existía,
+2822-V,ya existía,
+3500-V,ya existía,
+1905-V,ya existía,
+0494-V,ya existía,
 1156-V,error,ValueError: sin imagen de producto en https://www.espaciovino.com.ar/vinos-ficha/Portillo-Rose
-2753-V,ok,fondo quitado automáticamente
+2753-V,ya existía,

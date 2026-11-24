@@ -1,0 +1,8 @@
+codigo,estado,nota
+3501-V,ok,
+0564-V,error,ValueError: sin imagen de producto en https://www.winesargentinaexpress.com/products/salentein-primus-cabernet-sauvignon/
+3499-V,error,ValueError: sin imagen de producto en https://www.winesargentinaexpress.com/products/salentein-primus-chardonnay/
+2206-V,ok,
+2312-V,ok,
+1156-V,ok,
+1062-V,ok,
