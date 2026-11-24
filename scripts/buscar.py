@@ -19,6 +19,25 @@ def candidatos(q, maxn):
             if m.group(1) not in ids: ids.append(m.group(1))
         if len(ids) >= maxn: break
     return [f"https://http2.mlstatic.com/D_NQ_NP_2X_{i}-F.webp" for i in ids[:maxn]]
+VTEX = ["https://www.jumbo.com.ar", "https://www.carrefour.com.ar", "https://www.vea.com.ar"]
+TITULOS = {}
+def vtex(q, maxn):
+    urls = []
+    for base in VTEX:
+        try:
+            r = requests.get(base + "/api/catalog_system/pub/products/search", params={"ft": q, "_from": 0, "_to": 4}, headers=UA, timeout=40)
+            data = r.json() if r.ok else []
+        except Exception as e:
+            print("error vtex", base, e); continue
+        for p in data:
+            for it in p.get("items", [])[:1]:
+                for im in it.get("images", [])[:2]:
+                    u = im.get("imageUrl")
+                    if u and u not in urls:
+                        urls.append(u); TITULOS[u] = (base.split(".")[1] + ": " + p.get("productName", ""))[:60]
+        print("DEBUG vtex", base, q, len(data))
+        if len(urls) >= maxn: break
+    return urls[:maxn]
 def ddg(q, maxn):
     try:
         s = requests.Session(); s.headers.update(UA)
@@ -53,8 +72,10 @@ def main():
         res, celdas = [], []
         for r in filas:
             cod, q = r["codigo"].strip(), r["consulta"].strip()
-            lista = ddg(q, 8)
-            time.sleep(2)
+            lista = vtex(q, 8)
+            if len(lista) < 8:
+                lista += [u for u in ddg(q, 8) if u not in lista]
+                time.sleep(2)
             if len(lista) < 8:
                 lista += [u for u in bing(q, 12) if u not in lista]
                 time.sleep(3)
@@ -66,9 +87,9 @@ def main():
                 except Exception:
                     pass
         with open(os.path.join(out, "_candidatos.csv"), "w", newline="", encoding="utf-8") as fh:
-            w = csv.writer(fh); w.writerow(["codigo", "n", "img", "ancho", "alto"])
+            w = csv.writer(fh); w.writerow(["codigo", "n", "img", "ancho", "alto", "titulo"])
             dims = {(c, n): im.size for c, n, im in celdas}
-            for c, n, img in res: w.writerow([c, n, img, *dims.get((c, n), ("", ""))])
+            for c, n, img in res: w.writerow([c, n, img, *dims.get((c, n), ("", "")), TITULOS.get(img, "")])
         T, COLS = 300, 8
         porcod = {}
         for c, n, im in celdas: porcod.setdefault(c, []).append((n, im))
