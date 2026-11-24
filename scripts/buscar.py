@@ -14,10 +14,22 @@ def candidatos(q, maxn):
             h = requests.get(url, headers=UA, timeout=40).text
         except Exception as e:
             print("error", url, e); continue
+        print("DEBUG", url, len(h), h.count("mlstatic"), h[:300].replace("\n"," "))
         for m in PAT.finditer(h):
             if m.group(1) not in ids: ids.append(m.group(1))
         if len(ids) >= maxn: break
-    return ids[:maxn]
+    return [f"https://http2.mlstatic.com/D_NQ_NP_2X_{i}-F.webp" for i in ids[:maxn]]
+def bing(q, maxn):
+    try:
+        h = requests.get("https://www.bing.com/images/search", params={"q": q, "form": "HDRSC2", "first": "1"}, headers=UA, timeout=40).text
+    except Exception as e:
+        print("error bing", e); return []
+    urls = []
+    for m in re.finditer(r'murl&quot;:&quot;(.*?)&quot;', h):
+        u = m.group(1)
+        if u not in urls: urls.append(u)
+    print("DEBUG bing", q, len(h), len(urls))
+    return urls[:maxn]
 def main():
     for f in sorted(glob.glob("busquedas/*.csv")):
         lote = os.path.splitext(os.path.basename(f))[0]
@@ -28,19 +40,15 @@ def main():
         res, celdas = [], []
         for r in filas:
             cod, q = r["codigo"].strip(), r["consulta"].strip()
-            for n, i in enumerate(candidatos(q, 8), 1):
-                img = f"https://http2.mlstatic.com/D_NQ_NP_2X_{i}-F.webp"
+            lista = candidatos(q, 4)
+            lista += [u for u in bing(q, 12) if u not in lista]
+            for n, img in enumerate(lista[:8], 1):
                 res.append((cod, n, img))
                 try:
                     b = requests.get(img, headers=UA, timeout=40); b.raise_for_status()
                     im = Image.open(io.BytesIO(b.content)).convert("RGB"); celdas.append((cod, n, im))
                 except Exception:
-                    try:
-                        img2 = f"https://http2.mlstatic.com/D_NQ_NP_{i}-O.jpg"
-                        b = requests.get(img2, headers=UA, timeout=40); b.raise_for_status()
-                        im = Image.open(io.BytesIO(b.content)).convert("RGB"); celdas.append((cod, n, im))
-                        res[-1] = (cod, n, img2)
-                    except Exception: pass
+                    pass
         with open(os.path.join(out, "_candidatos.csv"), "w", newline="", encoding="utf-8") as fh:
             w = csv.writer(fh); w.writerow(["codigo", "n", "img", "ancho", "alto"])
             dims = {(c, n): im.size for c, n, im in celdas}
