@@ -1,24 +1,24 @@
 codigo,estado,nota
-0815-O,ok,fondo quitado automáticamente
-2277-O,ok,reflejo recortado
-1011-O,ok,
-2536-O,ok,
-2535-O,ok,
+0815-O,ya existía,
+2277-O,ya existía,
+1011-O,ya existía,
+2536-O,ya existía,
+2535-O,ya existía,
 0770-O,error,HTTPError: 400 Client Error: Bad Request for url: https://i0.wp.com/tabaqueriahorus.com/wp-content/uploads/2023/12/ROMEO-Y-JULIETA-N%C2%B0-3.jpg
-2164-O,ok,
-1585-O,ok,
-1322-O,ok,reflejo recortado
-2279-O,ok,fondo quitado automáticamente
-1098-O,ok,reflejo recortado
-1010-O,ok,reflejo recortado; baja resolución (original 239x341px)
-1283-O,ok,reflejo recortado
-0814-O,ok,reflejo recortado
-4592-O,ok,fondo quitado automáticamente
-1143-O,ok,fondo quitado automáticamente
-2019-O,ok,reflejo recortado
-4431-O,ok,
-4426-O,ok,fondo quitado automáticamente
-4427-O,ok,
-4421-O,ok,
-4515-O,ok,
-4418-O,ok,
+2164-O,ya existía,
+1585-O,ya existía,
+1322-O,ya existía,
+2279-O,ya existía,
+1098-O,ya existía,
+1010-O,ya existía,
+1283-O,ya existía,
+0814-O,ya existía,
+4592-O,ya existía,
+1143-O,ya existía,
+2019-O,ya existía,
+4431-O,ya existía,
+4426-O,ya existía,
+4427-O,ya existía,
+4421-O,ya existía,
+4515-O,ya existía,
+4418-O,ya existía,
