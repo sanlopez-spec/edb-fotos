@@ -24,11 +24,18 @@ TITULOS = {}
 def vtex(q, maxn):
     urls = []
     for base in VTEX:
+        data = []
         try:
-            r = requests.get(base + "/api/catalog_system/pub/products/search", params={"ft": q, "_from": 0, "_to": 4}, headers=UA, timeout=40)
-            data = r.json() if r.ok else []
+            r = requests.get(base + "/api/io/_v/api/intelligent-search/product_search/", params={"query": q, "count": 5, "page": 1, "locale": "es-AR"}, headers=UA, timeout=40)
+            if r.ok: data = r.json().get("products", [])
         except Exception as e:
-            print("error vtex", base, e); continue
+            print("error vtex-is", base, e)
+        if not data:
+            try:
+                r = requests.get(base + "/api/catalog_system/pub/products/search", params={"ft": q, "_from": 0, "_to": 4}, headers=UA, timeout=40)
+                data = r.json() if r.ok else []
+            except Exception as e:
+                print("error vtex", base, e); continue
         for p in data:
             for it in p.get("items", [])[:1]:
                 for im in it.get("images", [])[:2]:
