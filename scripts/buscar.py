@@ -1,6 +1,6 @@
 """Busca candidatos de foto en Mercado Libre para cada fila de busquedas/*.csv (codigo,consulta).
 Escribe busquedas/<lote>/: _candidatos.csv (codigo,n,img) y _hoja_N.jpg (hojas de contacto numeradas)."""
-import csv, glob, io, os, re, sys
+import csv, glob, io, os, re, sys, time
 import requests
 from PIL import Image, ImageDraw
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36",
@@ -19,6 +19,19 @@ def candidatos(q, maxn):
             if m.group(1) not in ids: ids.append(m.group(1))
         if len(ids) >= maxn: break
     return [f"https://http2.mlstatic.com/D_NQ_NP_2X_{i}-F.webp" for i in ids[:maxn]]
+def ddg(q, maxn):
+    try:
+        s = requests.Session(); s.headers.update(UA)
+        h = s.get("https://duckduckgo.com/", params={"q": q, "iax": "images", "ia": "images"}, timeout=40).text
+        m = re.search(r'vqd=["\']?([\d-]+)', h)
+        if not m:
+            print("DEBUG ddg sin vqd", q); return []
+        s.headers.update({"Referer": "https://duckduckgo.com/", "Accept": "application/json"})
+        r = s.get("https://duckduckgo.com/i.js", params={"l": "ar-es", "o": "json", "q": q, "vqd": m.group(1), "f": ",,,,,", "p": "1"}, timeout=40)
+        urls = [x["image"] for x in r.json().get("results", []) if x.get("image")]
+        print("DEBUG ddg", q, len(urls)); return urls[:maxn]
+    except Exception as e:
+        print("error ddg", q, e); return []
 def bing(q, maxn):
     try:
         h = requests.get("https://www.bing.com/images/search", params={"q": q, "form": "HDRSC2", "first": "1"}, headers=UA, timeout=40).text
@@ -40,8 +53,11 @@ def main():
         res, celdas = [], []
         for r in filas:
             cod, q = r["codigo"].strip(), r["consulta"].strip()
-            lista = candidatos(q, 4)
-            lista += [u for u in bing(q, 12) if u not in lista]
+            lista = ddg(q, 8)
+            time.sleep(2)
+            if len(lista) < 8:
+                lista += [u for u in bing(q, 12) if u not in lista]
+                time.sleep(3)
             for n, img in enumerate(lista[:8], 1):
                 res.append((cod, n, img))
                 try:
