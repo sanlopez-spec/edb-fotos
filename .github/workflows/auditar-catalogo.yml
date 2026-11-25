@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install pillow numpy requests
-      - run: python scripts/auditar.py
+      - run: SOLO_MUESTRA=1 python scripts/auditar.py
       - name: Guardar resultados
         run: |
           git config user.name "github-actions[bot]"

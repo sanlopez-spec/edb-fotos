@@ -89,6 +89,10 @@ def leer(url):
 
 
 def main():
+    os.makedirs("auditoria", exist_ok=True)
+    for i, u in enumerate([BASE + "/productos/aberlour-12-anos-700ml/", BASE + "/productos/salentein-numina-malbec/"]):
+        open(f"auditoria/muestra_{i}.html", "w", encoding="utf-8").write(S.get(u, timeout=60).text)
+    if os.environ.get("SOLO_MUESTRA"): return
     us = urls_productos()
     print(len(us), "productos en el sitemap")
     with ThreadPoolExecutor(8) as ex:
