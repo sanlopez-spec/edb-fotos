@@ -72,27 +72,36 @@ def leer(url):
         t = S.get(url, timeout=60).text
     except Exception as e:
         return {"url": url, "error": str(e)[:100]}
-    nombre = re.search(r'<meta property="og:title" content="([^"]*)"', t)
-    sku = re.findall(r'"sku"\s*:\s*"([^"]+)"', t)
-    pid = re.search(r'data-product-id="(\d+)"', t) or re.search(r'"product_id"\s*:\s*"?(\d+)', t) or re.search(r'LS\.product\s*=\s*\{[^}]*?"id"\s*:\s*(\d+)', t)
-    imgs = imagenes(t)
-    cod = sku[0] if sku else ""
+    dec = lambda x: json.loads('"' + x + '"') if x else ""
+    pid = re.search(r"LS\.product\s*=\s*\{\s*id\s*:\s*(\d+)", t)
+    nombre = re.search(r"LS\.product\s*=\s*\{\s*id\s*:\s*\d+,\s*name\s*:\s*'((?:[^'\\]|\\.)*)'", t)
+    sku = re.search(r'LS\.variants\s*=\s*\[\{.*?"sku":"((?:[^"\\]|\\.)*)"', t, re.S)
+    cant = re.search(r'data-product-images-amount="(\d+)"', t)
+    slides = re.findall(r'js-product-slide[^"]*"[^>]*data-image-position="\d+">\s*<a href="([^"]+)"', t)
+    vis, imgs = set(), []
+    for h in slides:
+        f = re.search(r"/products/(.+?)-\d+-\d+\.\w+$", h)
+        f = f.group(1) if f else h
+        if f not in vis: vis.add(f); imgs.append((f, ("https:" + h) if h.startswith("//") else h))
+    if not imgs:
+        og = re.search(r'og:image" content="([^"]+)"', t)
+        if og and "/products/" in og.group(1):
+            f = re.search(r"/products/(.+?)-\d+-\d+\.\w+$", og.group(1))
+            imgs = [(f.group(1) if f else og.group(1), og.group(1))]
+    cod = dec(sku.group(1)) if sku else ""
     codl = cod.lower()
     nuevas = [f for f, _ in imgs if codl and f.startswith(codl + "-")]
     primera = imgs[0] if imgs else ("", "")
     es_nueva = bool(codl) and primera[0].startswith(codl + "-")
     c, lados = cortada(primera[1]) if primera[1] else ("", "")
     return {"url": url, "id": pid.group(1) if pid else "", "codigo": cod,
-            "nombre": html.unescape(nombre.group(1)) if nombre else "", "fotos": len(imgs),
+            "nombre": dec(nombre.group(1)) if nombre else "", "fotos": int(cant.group(1)) if cant else len(imgs),
             "primera": primera[1], "primera_nueva": "si" if es_nueva else "no",
             "fotos_nuevas": len(nuevas), "cortada": c, "detalle": lados, "error": ""}
 
 
 def main():
     os.makedirs("auditoria", exist_ok=True)
-    for i, u in enumerate([BASE + "/productos/aberlour-12-anos-700ml/", BASE + "/productos/salentein-numina-malbec/"]):
-        open(f"auditoria/muestra_{i}.html", "w", encoding="utf-8").write(S.get(u, timeout=60).text)
-    if os.environ.get("SOLO_MUESTRA"): return
     us = urls_productos()
     print(len(us), "productos en el sitemap")
     with ThreadPoolExecutor(8) as ex:
