@@ -1,5 +1,5 @@
 codigo,estado,nota
-2569-O,error,"ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+2569-O,error,UnidentifiedImageError: cannot identify image file <_io.BytesIO object at 0x749d0efa6fc0>
 1325-O,ya existía,
 1183-O,ya existía,
 4429-O,ya existía,
